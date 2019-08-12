@@ -204,3 +204,18 @@ HEADER
 }
 
 /* Content */
+.left__section {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+  max-width: 5rem;
+}
+
+.date__text {
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  display: inline;
+  margin: 0.5rem 0;
+}
+
+/* SVG */
