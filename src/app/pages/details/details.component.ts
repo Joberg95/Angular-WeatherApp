@@ -18,25 +18,25 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   today: string;
 
-  day1NAme: string;
+  day1Name: string;
   day1State: string;
-  day1Temp: string;
+  day1Temp: number;
 
-  day2NAme: string;
+  day2Name: string;
   day2State: string;
-  day2Temp: string;
+  day2Temp: number;
 
-  day3NAme: string;
+  day3Name: string;
   day3State: string;
-  day3Temp: string;
+  day3Temp: number;
 
-  day4NAme: string;
+  day4Name: string;
   day4State: string;
-  day4Temp: string;
+  day4Temp: number;
 
-  day5NAme: string;
+  day5Name: string;
   day5State: string;
-  day5Temp: string;
+  day5Temp: number;
 
   sub1: Subscription;
   sub2: Subscription;
@@ -49,5 +49,27 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const todayNumberInWeek = new Date().getDay();
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    this.today = days[todayNumberInWeek];
+
+    this.activeRouter.paramMap.subscribe((route: any) => {
+
+      this.city = route.params.city;
+      this.sub1 = this.weather.getWeatherState(this.city).subscribe((state) => this.state = state);
+      this.sub2 = this.weather.getCurrentTemp(this.city).subscribe((temperature) => this.temp = temperature);
+      this.sub3 = this.weather.getCurrentHum(this.city).subscribe((humidity) => this.hum = humidity);
+      this.sub4 = this.weather.getCurrentWind(this.city).subscribe((windspeed) => this.wind = windspeed);
+      this.sub5 = this.weather.getForecast(this.city).subscribe((data: any) => {
+        console.log(data);
+        for (let i = 0; i < data.length; i++) {
+          const date = new Date(data[i].dt_txt).getDay();
+          console.log(days[date]);
+          if (((date === todayNumberInWeek + 1) || (todayNumberInWeek === 6 && date === 0)) && !this.day1Name) {
+            this.day1Name = days[date];
+            this.day1State = data[i].weather[0].main;
+            this.day1Temp = Math.round(data[i].main.temp);
+          }
+        }
+    })
   }
 }
